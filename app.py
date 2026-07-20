@@ -1,5 +1,5 @@
 # app.py
-from fastapi import FastAPI
+import streamlit as st
 from langgraph.graph import StateGraph
 from langchain_openai import ChatOpenAI
 
@@ -43,11 +43,11 @@ graph.add_edge("retrieve", "decide")
 
 workflow = graph.compile()
 
-# FastAPI app
-app = FastAPI()
+# --- Streamlit UI ---
+st.title("HelpDesk AI")
+query = st.text_input("Enter your support query")
 
-@app.get("/support")
-def support(query: str):
+if query:
     state = SupportState(query)
     result = workflow.invoke(state)
-    return {"response": result.response}
+    st.write(result.response)
